@@ -415,7 +415,7 @@ func (i *PresentationFeedback) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e PresentationFeedbackSyncOutputEvent
 		l := 0
-		e.Output = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Output)
+		e.Output = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Output)(nil)).(*client.Output)
 		l += 4
 
 		i.syncOutputHandler(e)

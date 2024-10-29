@@ -771,7 +771,7 @@ func (i *LinuxBufferParams) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e LinuxBufferParamsCreatedEvent
 		l := 0
-		e.Buffer = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Buffer)
+		e.Buffer = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Buffer)(nil)).(*client.Buffer)
 		l += 4
 
 		i.createdHandler(e)

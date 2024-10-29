@@ -681,15 +681,15 @@ func writeEventDispatcher(w io.Writer, ifaceName string, v Interface) {
 					}
 
 					if protocol.Name == "wayland" {
-						fmt.Fprintf(w, "e.%s = i.Context().GetProxy(Uint32(data[l :l+4])).(*%s)\n", argName, argIface)
+						fmt.Fprintf(w, "e.%s = i.Context().GetOrRegister(Uint32(data[l :l+4]), (*%s)(nil)).(*%s)\n", argName, argIface, argIface)
 					} else {
-						fmt.Fprintf(w, "e.%s = i.Context().GetProxy(client.Uint32(data[l :l+4])).(*%s)\n", argName, argIface)
+						fmt.Fprintf(w, "e.%s = i.Context().GetOrRegister(client.Uint32(data[l :l+4]), (*%s)(nil)).(*%s)\n", argName, argIface, argIface)
 					}
 				} else {
 					if protocol.Name == "wayland" {
-						fmt.Fprintf(w, "e.%s = i.Context().GetProxy(Uint32(data[l :l+4]))\n", argName)
+						fmt.Fprintf(w, "e.%s = i.Context().GetOrRegister(Uint32(data[l :l+4]), (*BaseProxy)(nil))\n", argName)
 					} else {
-						fmt.Fprintf(w, "e.%s = i.Context().GetProxy(client.Uint32(data[l :l+4]))\n", argName)
+						fmt.Fprintf(w, "e.%s = i.Context().GetOrRegister(client.Uint32(data[l :l+4]), (*client.BaseProxy)(nil))\n", argName)
 					}
 				}
 				fmt.Fprintf(w, "l += 4\n")

@@ -669,7 +669,7 @@ func (i *InputMethod) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e InputMethodActivateEvent
 		l := 0
-		e.Id = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*InputMethodContext)
+		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*InputMethodContext)(nil)).(*InputMethodContext)
 		l += 4
 
 		i.activateHandler(e)
@@ -679,7 +679,7 @@ func (i *InputMethod) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e InputMethodDeactivateEvent
 		l := 0
-		e.Context = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*InputMethodContext)
+		e.Context = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*InputMethodContext)(nil)).(*InputMethodContext)
 		l += 4
 
 		i.deactivateHandler(e)

@@ -211,7 +211,7 @@ func (i *Display) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e DisplayErrorEvent
 		l := 0
-		e.ObjectId = i.Context().GetProxy(Uint32(data[l : l+4]))
+		e.ObjectId = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*BaseProxy)(nil))
 		l += 4
 		e.Code = Uint32(data[l : l+4])
 		l += 4
@@ -2665,7 +2665,7 @@ func (i *DataDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e DataDeviceDataOfferEvent
 		l := 0
-		e.Id = i.Context().GetProxy(Uint32(data[l : l+4])).(*DataOffer)
+		e.Id = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*DataOffer)(nil)).(*DataOffer)
 		l += 4
 
 		i.dataOfferHandler(e)
@@ -2677,13 +2677,13 @@ func (i *DataDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(Uint32(data[l : l+4])).(*Surface)
+		e.Surface = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Surface)(nil)).(*Surface)
 		l += 4
 		e.X = Fixed(data[l : l+4])
 		l += 4
 		e.Y = Fixed(data[l : l+4])
 		l += 4
-		e.Id = i.Context().GetProxy(Uint32(data[l : l+4])).(*DataOffer)
+		e.Id = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*DataOffer)(nil)).(*DataOffer)
 		l += 4
 
 		i.enterHandler(e)
@@ -2721,7 +2721,7 @@ func (i *DataDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e DataDeviceSelectionEvent
 		l := 0
-		e.Id = i.Context().GetProxy(Uint32(data[l : l+4])).(*DataOffer)
+		e.Id = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*DataOffer)(nil)).(*DataOffer)
 		l += 4
 
 		i.selectionHandler(e)
@@ -4396,7 +4396,7 @@ func (i *Surface) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e SurfaceEnterEvent
 		l := 0
-		e.Output = i.Context().GetProxy(Uint32(data[l : l+4])).(*Output)
+		e.Output = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Output)(nil)).(*Output)
 		l += 4
 
 		i.enterHandler(e)
@@ -4406,7 +4406,7 @@ func (i *Surface) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e SurfaceLeaveEvent
 		l := 0
-		e.Output = i.Context().GetProxy(Uint32(data[l : l+4])).(*Output)
+		e.Output = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Output)(nil)).(*Output)
 		l += 4
 
 		i.leaveHandler(e)
@@ -5418,7 +5418,7 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(Uint32(data[l : l+4])).(*Surface)
+		e.Surface = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Surface)(nil)).(*Surface)
 		l += 4
 		e.SurfaceX = Fixed(data[l : l+4])
 		l += 4
@@ -5434,7 +5434,7 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(Uint32(data[l : l+4])).(*Surface)
+		e.Surface = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Surface)(nil)).(*Surface)
 		l += 4
 
 		i.leaveHandler(e)
@@ -5866,7 +5866,7 @@ func (i *Keyboard) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(Uint32(data[l : l+4])).(*Surface)
+		e.Surface = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Surface)(nil)).(*Surface)
 		l += 4
 		keysLen := int(Uint32(data[l : l+4]))
 		l += 4
@@ -5883,7 +5883,7 @@ func (i *Keyboard) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(Uint32(data[l : l+4])).(*Surface)
+		e.Surface = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Surface)(nil)).(*Surface)
 		l += 4
 
 		i.leaveHandler(e)
@@ -6165,7 +6165,7 @@ func (i *Touch) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Time = Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(Uint32(data[l : l+4])).(*Surface)
+		e.Surface = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Surface)(nil)).(*Surface)
 		l += 4
 		e.Id = int32(Uint32(data[l : l+4]))
 		l += 4

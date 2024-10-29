@@ -174,7 +174,7 @@ func (i *TabletSeat) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TabletSeatTabletAddedEvent
 		l := 0
-		e.Id = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*Tablet)
+		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*Tablet)(nil)).(*Tablet)
 		l += 4
 
 		i.tabletAddedHandler(e)
@@ -184,7 +184,7 @@ func (i *TabletSeat) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TabletSeatToolAddedEvent
 		l := 0
-		e.Id = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*TabletTool)
+		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*TabletTool)(nil)).(*TabletTool)
 		l += 4
 
 		i.toolAddedHandler(e)
@@ -1005,9 +1005,9 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = client.Uint32(data[l : l+4])
 		l += 4
-		e.Tablet = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*Tablet)
+		e.Tablet = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*Tablet)(nil)).(*Tablet)
 		l += 4
-		e.Surface = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Surface)
+		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 
 		i.proximityInHandler(e)

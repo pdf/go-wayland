@@ -197,7 +197,7 @@ func (i *TabletSeat) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TabletSeatTabletAddedEvent
 		l := 0
-		e.Id = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*Tablet)
+		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*Tablet)(nil)).(*Tablet)
 		l += 4
 
 		i.tabletAddedHandler(e)
@@ -207,7 +207,7 @@ func (i *TabletSeat) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TabletSeatToolAddedEvent
 		l := 0
-		e.Id = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*TabletTool)
+		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*TabletTool)(nil)).(*TabletTool)
 		l += 4
 
 		i.toolAddedHandler(e)
@@ -217,7 +217,7 @@ func (i *TabletSeat) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TabletSeatPadAddedEvent
 		l := 0
-		e.Id = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*TabletPad)
+		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*TabletPad)(nil)).(*TabletPad)
 		l += 4
 
 		i.padAddedHandler(e)
@@ -1036,9 +1036,9 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = client.Uint32(data[l : l+4])
 		l += 4
-		e.Tablet = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*Tablet)
+		e.Tablet = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*Tablet)(nil)).(*Tablet)
 		l += 4
-		e.Surface = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Surface)
+		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 
 		i.proximityInHandler(e)
@@ -2107,7 +2107,7 @@ func (i *TabletPadGroup) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TabletPadGroupRingEvent
 		l := 0
-		e.Ring = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*TabletPadRing)
+		e.Ring = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*TabletPadRing)(nil)).(*TabletPadRing)
 		l += 4
 
 		i.ringHandler(e)
@@ -2117,7 +2117,7 @@ func (i *TabletPadGroup) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TabletPadGroupStripEvent
 		l := 0
-		e.Strip = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*TabletPadStrip)
+		e.Strip = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*TabletPadStrip)(nil)).(*TabletPadStrip)
 		l += 4
 
 		i.stripHandler(e)
@@ -2467,7 +2467,7 @@ func (i *TabletPad) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TabletPadGroupEvent
 		l := 0
-		e.PadGroup = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*TabletPadGroup)
+		e.PadGroup = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*TabletPadGroup)(nil)).(*TabletPadGroup)
 		l += 4
 
 		i.groupHandler(e)
@@ -2522,9 +2522,9 @@ func (i *TabletPad) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = client.Uint32(data[l : l+4])
 		l += 4
-		e.Tablet = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*Tablet)
+		e.Tablet = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*Tablet)(nil)).(*Tablet)
 		l += 4
-		e.Surface = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Surface)
+		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 
 		i.enterHandler(e)
@@ -2536,7 +2536,7 @@ func (i *TabletPad) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Serial = client.Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Surface)
+		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 
 		i.leaveHandler(e)

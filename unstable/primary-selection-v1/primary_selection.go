@@ -218,7 +218,7 @@ func (i *PrimarySelectionDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e PrimarySelectionDeviceDataOfferEvent
 		l := 0
-		e.Offer = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*PrimarySelectionOffer)
+		e.Offer = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*PrimarySelectionOffer)(nil)).(*PrimarySelectionOffer)
 		l += 4
 
 		i.dataOfferHandler(e)
@@ -228,7 +228,7 @@ func (i *PrimarySelectionDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e PrimarySelectionDeviceSelectionEvent
 		l := 0
-		e.Id = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*PrimarySelectionOffer)
+		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*PrimarySelectionOffer)(nil)).(*PrimarySelectionOffer)
 		l += 4
 
 		i.selectionHandler(e)

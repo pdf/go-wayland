@@ -251,7 +251,7 @@ func (i *DrmLeaseDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e DrmLeaseDeviceConnectorEvent
 		l := 0
-		e.Id = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*DrmLeaseConnector)
+		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*DrmLeaseConnector)(nil)).(*DrmLeaseConnector)
 		l += 4
 
 		i.connectorHandler(e)

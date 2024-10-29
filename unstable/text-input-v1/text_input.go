@@ -909,7 +909,7 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		}
 		var e TextInputEnterEvent
 		l := 0
-		e.Surface = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Surface)
+		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 
 		i.enterHandler(e)

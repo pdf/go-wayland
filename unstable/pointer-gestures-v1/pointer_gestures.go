@@ -269,7 +269,7 @@ func (i *PointerGestureSwipe) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Time = client.Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Surface)
+		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 		e.Fingers = client.Uint32(data[l : l+4])
 		l += 4
@@ -446,7 +446,7 @@ func (i *PointerGesturePinch) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Time = client.Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Surface)
+		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 		e.Fingers = client.Uint32(data[l : l+4])
 		l += 4
@@ -603,7 +603,7 @@ func (i *PointerGestureHold) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Time = client.Uint32(data[l : l+4])
 		l += 4
-		e.Surface = i.Context().GetProxy(client.Uint32(data[l : l+4])).(*client.Surface)
+		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 		e.Fingers = client.Uint32(data[l : l+4])
 		l += 4
