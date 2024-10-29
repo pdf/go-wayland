@@ -1,3 +1,3 @@
 package text_input
 
-//go:generate go run github.com/rajveermalviya/go-wayland/cmd/go-wayland-scanner -pkg text_input -prefix zwp -suffix v1 -o text_input.go -i https://raw.githubusercontent.com/wayland-project/wayland-protocols/1.31/unstable/text-input/text-input-unstable-v1.xml
+//go:generate go run github.com/rajveermalviya/go-wayland/cmd/go-wayland-scanner -pkg text_input -prefix zwp -suffix v1 -o text_input.go -i https://gitlab.freedesktop.org/wayland/wayland-protocols/-/raw/$WAYLAND_PROTOCOLS_TAG/unstable/text-input/text-input-unstable-v1.xml
