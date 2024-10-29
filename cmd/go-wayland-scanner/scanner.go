@@ -217,7 +217,7 @@ func writeInterface(w io.Writer, v Interface) {
 	ifaceNameLower := toLowerCamel(v.Name)
 
 	// Interface struct
-	fmt.Fprintf(w, "// %s : %s\n", ifaceName, doc.Synopsis(v.Description.Summary))
+	fmt.Fprintf(w, "// %s : %s\n", ifaceName, synopsis(v.Description.Summary))
 	fmt.Fprint(w, comment(v.Description.Text))
 	fmt.Fprintf(w, "type %s struct {\n", ifaceName)
 	if protocol.Name != "wayland" {
@@ -231,7 +231,7 @@ func writeInterface(w io.Writer, v Interface) {
 	fmt.Fprintf(w, "}\n")
 
 	// Constructor
-	fmt.Fprintf(w, "// New%s : %s\n", ifaceName, doc.Synopsis(v.Description.Summary))
+	fmt.Fprintf(w, "// New%s : %s\n", ifaceName, synopsis(v.Description.Summary))
 	fmt.Fprint(w, comment(v.Description.Text))
 	if protocol.Name != "wayland" {
 		fmt.Fprintf(w, "func New%s(ctx *client.Context) *%s {\n", ifaceName, ifaceName)
@@ -307,14 +307,14 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 
 	returnTypes = append(returnTypes, "error")
 
-	fmt.Fprintf(w, "// %s : %s\n", requestName, doc.Synopsis(r.Description.Summary))
+	fmt.Fprintf(w, "// %s : %s\n", requestName, synopsis(r.Description.Summary))
 	fmt.Fprint(w, comment(r.Description.Text))
 	fmt.Fprintf(w, "//\n")
 	for _, arg := range r.Args {
 		argNameLower := toLowerCamel(arg.Name)
 
 		if arg.Summary != "" && arg.Type != "new_id" {
-			fmt.Fprintf(w, "//  %s: %s\n", argNameLower, doc.Synopsis(arg.Summary))
+			fmt.Fprintf(w, "//  %s: %s\n", argNameLower, synopsis(arg.Summary))
 		}
 	}
 	fmt.Fprintf(w, "func (i *%s) %s(%s) (%s) {\n", ifaceName, requestName, strings.Join(params, ","), strings.Join(returnTypes, ","))
@@ -534,14 +534,14 @@ func writeEnum(w io.Writer, ifaceName string, e Enum) {
 
 	fmt.Fprintf(w, "type %s%s uint32\n", ifaceName, enumName)
 
-	fmt.Fprintf(w, "// %s%s : %s\n", ifaceName, enumName, doc.Synopsis(e.Description.Summary))
+	fmt.Fprintf(w, "// %s%s : %s\n", ifaceName, enumName, synopsis(e.Description.Summary))
 	fmt.Fprint(w, comment(e.Description.Text))
 	fmt.Fprintf(w, "const (\n")
 	for _, entry := range e.Entries {
 		entryName := toCamel(entry.Name)
 
 		if entry.Summary != "" {
-			fmt.Fprintf(w, "// %s%s%s : %s\n", ifaceName, enumName, entryName, doc.Synopsis(entry.Summary))
+			fmt.Fprintf(w, "// %s%s%s : %s\n", ifaceName, enumName, entryName, synopsis(entry.Summary))
 		}
 		fmt.Fprintf(w, "%s%s%s %s%s = %s\n", ifaceName, enumName, entryName, ifaceName, enumName, entry.Value)
 	}
@@ -583,14 +583,14 @@ func writeEvent(w io.Writer, ifaceName string, e Event) {
 	eventNameLower := toLowerCamel(e.Name)
 
 	// Event struct
-	fmt.Fprintf(w, "// %s%sEvent : %s\n", ifaceName, eventName, doc.Synopsis(e.Description.Summary))
+	fmt.Fprintf(w, "// %s%sEvent : %s\n", ifaceName, eventName, synopsis(e.Description.Summary))
 	fmt.Fprint(w, comment(e.Description.Text))
 	fmt.Fprintf(w, "type %s%sEvent struct {\n", ifaceName, eventName)
 	for _, arg := range e.Args {
 		argName := toCamel(arg.Name)
 
 		if arg.Description.Summary != "" {
-			fmt.Fprintf(w, "// %s %s\n", argName, doc.Synopsis(arg.Description.Summary))
+			fmt.Fprintf(w, "// %s %s\n", argName, synopsis(arg.Description.Summary))
 		}
 		fmt.Fprint(w, comment(arg.Description.Text))
 		switch arg.Type {
@@ -787,6 +787,11 @@ func comment(s string) string {
 	}
 
 	return strings.TrimSuffix(sb.String(), "// \n")
+}
+
+func synopsis(s string) string {
+	var p doc.Package
+	return p.Synopsis(s)
 }
 
 func hasDestructor(v Interface) bool {
