@@ -141,8 +141,8 @@ func main() {
 
 	// Imports
 	if protocol.Name != "wayland" {
-		fmt.Fprintf(w, "import \"github.com/rajveermalviya/go-wayland/wayland/client\"\n")
-		fmt.Fprintf(w, "import xdg_shell \"github.com/rajveermalviya/go-wayland/wayland/stable/xdg-shell\"\n")
+		fmt.Fprintf(w, "import \"github.com/rajveermalviya/go-wayland/client\"\n")
+		fmt.Fprintf(w, "import xdg_shell \"github.com/rajveermalviya/go-wayland/stable/xdg-shell\"\n")
 	}
 
 	// Intefaces
@@ -185,7 +185,7 @@ func fmtFile(b []byte) []byte {
 	}
 
 	langVersion := ""
-	out, err := exec.Command("go", "list", "-m", "-f", "{{.GoVersion}}").Output()
+	out, err := exec.Command("go", "list", "-m", "-f", "go{{.GoVersion}}").Output()
 	outSlice := bytes.Split(out, []byte("\n"))
 	out = outSlice[0]
 	out = bytes.TrimSpace(out)
