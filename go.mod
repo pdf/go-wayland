@@ -1,4 +1,4 @@
-module github.com/rajveermalviya/go-wayland
+module github.com/raitonoberu/go-wayland
 
 go 1.23.0
 
