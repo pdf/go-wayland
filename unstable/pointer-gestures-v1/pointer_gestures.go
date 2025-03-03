@@ -71,7 +71,6 @@ func (i *PointerGestures) GetSwipeGesture(pointer *client.Pointer) (*PointerGest
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], pointer.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -93,7 +92,6 @@ func (i *PointerGestures) GetPinchGesture(pointer *client.Pointer) (*PointerGest
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], pointer.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -133,7 +131,6 @@ func (i *PointerGestures) GetHoldGesture(pointer *client.Pointer) (*PointerGestu
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], pointer.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -272,7 +269,6 @@ func (i *PointerGestureSwipe) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 		e.Fingers = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.beginHandler(e)
 	case 1:
@@ -286,7 +282,6 @@ func (i *PointerGestureSwipe) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Dx = client.Fixed(data[l : l+4])
 		l += 4
 		e.Dy = client.Fixed(data[l : l+4])
-		l += 4
 
 		i.updateHandler(e)
 	case 2:
@@ -300,7 +295,6 @@ func (i *PointerGestureSwipe) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Time = client.Uint32(data[l : l+4])
 		l += 4
 		e.Cancelled = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.endHandler(e)
 	}
@@ -449,7 +443,6 @@ func (i *PointerGesturePinch) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 		e.Fingers = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.beginHandler(e)
 	case 1:
@@ -467,7 +460,6 @@ func (i *PointerGesturePinch) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Scale = client.Fixed(data[l : l+4])
 		l += 4
 		e.Rotation = client.Fixed(data[l : l+4])
-		l += 4
 
 		i.updateHandler(e)
 	case 2:
@@ -481,7 +473,6 @@ func (i *PointerGesturePinch) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Time = client.Uint32(data[l : l+4])
 		l += 4
 		e.Cancelled = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.endHandler(e)
 	}
@@ -606,7 +597,6 @@ func (i *PointerGestureHold) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
 		l += 4
 		e.Fingers = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.beginHandler(e)
 	case 1:
@@ -620,7 +610,6 @@ func (i *PointerGestureHold) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Time = client.Uint32(data[l : l+4])
 		l += 4
 		e.Cancelled = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.endHandler(e)
 	}

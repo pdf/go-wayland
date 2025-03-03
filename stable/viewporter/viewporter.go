@@ -95,7 +95,6 @@ func (i *Viewporter) GetViewport(surface *client.Surface) (*Viewport, error) {
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -303,7 +302,6 @@ func (i *Viewport) SetSource(x, y, width, height float64) error {
 	client.PutFixed(_reqBuf[l:l+4], width)
 	l += 4
 	client.PutFixed(_reqBuf[l:l+4], height)
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -335,7 +333,6 @@ func (i *Viewport) SetDestination(width, height int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }

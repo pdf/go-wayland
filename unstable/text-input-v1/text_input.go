@@ -135,7 +135,6 @@ func (i *TextInput) Activate(seat *client.Seat, surface *client.Surface) error {
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -155,7 +154,6 @@ func (i *TextInput) Deactivate(seat *client.Seat) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -232,7 +230,6 @@ func (i *TextInput) SetSurroundingText(text string, cursor, anchor uint32) error
 	client.PutUint32(_reqBuf[l:l+4], uint32(cursor))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(anchor))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -258,7 +255,6 @@ func (i *TextInput) SetContentType(hint, purpose uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(hint))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(purpose))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -280,7 +276,6 @@ func (i *TextInput) SetCursorRectangle(x, y, width, height int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -305,7 +300,6 @@ func (i *TextInput) SetPreferredLanguage(language string) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutString(_reqBuf[l:l+(4+languageLen)], language, languageLen)
-	l += (4 + languageLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -323,7 +317,6 @@ func (i *TextInput) CommitState(serial uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -341,7 +334,6 @@ func (i *TextInput) InvokeAction(button, index uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(button))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(index))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -910,7 +902,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TextInputEnterEvent
 		l := 0
 		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
-		l += 4
 
 		i.enterHandler(e)
 	case 1:
@@ -930,7 +921,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Map = make([]byte, _mapLen)
 		copy(e.Map, data[l:l+_mapLen])
-		l += _mapLen
 
 		i.modifiersMapHandler(e)
 	case 3:
@@ -940,7 +930,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TextInputInputPanelStateEvent
 		l := 0
 		e.State = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.inputPanelStateHandler(e)
 	case 4:
@@ -958,7 +947,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		commitLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Commit = client.String(data[l : l+commitLen])
-		l += commitLen
 
 		i.preeditStringHandler(e)
 	case 5:
@@ -972,7 +960,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Length = client.Uint32(data[l : l+4])
 		l += 4
 		e.Style = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.preeditStylingHandler(e)
 	case 6:
@@ -982,7 +969,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TextInputPreeditCursorEvent
 		l := 0
 		e.Index = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.preeditCursorHandler(e)
 	case 7:
@@ -996,7 +982,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		textLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Text = client.String(data[l : l+textLen])
-		l += textLen
 
 		i.commitStringHandler(e)
 	case 8:
@@ -1008,7 +993,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Index = int32(client.Uint32(data[l : l+4]))
 		l += 4
 		e.Anchor = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.cursorPositionHandler(e)
 	case 9:
@@ -1020,7 +1004,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Index = int32(client.Uint32(data[l : l+4]))
 		l += 4
 		e.Length = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.deleteSurroundingTextHandler(e)
 	case 10:
@@ -1038,7 +1021,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		e.State = client.Uint32(data[l : l+4])
 		l += 4
 		e.Modifiers = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.keysymHandler(e)
 	case 11:
@@ -1052,7 +1034,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		languageLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Language = client.String(data[l : l+languageLen])
-		l += languageLen
 
 		i.languageHandler(e)
 	case 12:
@@ -1064,7 +1045,6 @@ func (i *TextInput) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Serial = client.Uint32(data[l : l+4])
 		l += 4
 		e.Direction = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.textDirectionHandler(e)
 	}
@@ -1100,7 +1080,6 @@ func (i *TextInputManager) CreateTextInput() (*TextInput, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }

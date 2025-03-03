@@ -91,7 +91,6 @@ func (i *InputTimestampsManager) GetKeyboardTimestamps(keyboard *client.Keyboard
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], keyboard.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -121,7 +120,6 @@ func (i *InputTimestampsManager) GetPointerTimestamps(pointer *client.Pointer) (
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], pointer.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -151,7 +149,6 @@ func (i *InputTimestampsManager) GetTouchTimestamps(touch *client.Touch) (*Input
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], touch.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -237,7 +234,6 @@ func (i *InputTimestamps) Dispatch(opcode uint32, fd int, data []byte) {
 		e.TvSecLo = client.Uint32(data[l : l+4])
 		l += 4
 		e.TvNsec = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.timestampHandler(e)
 	}

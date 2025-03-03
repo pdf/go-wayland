@@ -83,7 +83,6 @@ func (i *RelativePointerManager) GetRelativePointer(pointer *client.Pointer) (*R
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], pointer.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -192,7 +191,6 @@ func (i *RelativePointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.DxUnaccel = client.Fixed(data[l : l+4])
 		l += 4
 		e.DyUnaccel = client.Fixed(data[l : l+4])
-		l += 4
 
 		i.relativeMotionHandler(e)
 	}

@@ -71,7 +71,6 @@ func (i *TabletManager) GetTabletSeat(seat *client.Seat) (*TabletSeat, error) {
 	client.PutUint32(_reqBuf[l:l+4], tabletSeat.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return tabletSeat, err
 }
@@ -175,7 +174,6 @@ func (i *TabletSeat) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletSeatTabletAddedEvent
 		l := 0
 		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*Tablet)(nil)).(*Tablet)
-		l += 4
 
 		i.tabletAddedHandler(e)
 	case 1:
@@ -185,7 +183,6 @@ func (i *TabletSeat) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletSeatToolAddedEvent
 		l := 0
 		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*TabletTool)(nil)).(*TabletTool)
-		l += 4
 
 		i.toolAddedHandler(e)
 	}
@@ -315,15 +312,13 @@ func (i *TabletTool) SetCursor(serial uint32, surface *client.Surface, hotspotX,
 	l += 4
 	if surface == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], surface.ID())
-		l += 4
 	}
+	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(hotspotX))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(hotspotY))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -946,7 +941,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletToolTypeEvent
 		l := 0
 		e.ToolType = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.typeHandler(e)
 	case 1:
@@ -958,7 +952,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		e.HardwareSerialHi = client.Uint32(data[l : l+4])
 		l += 4
 		e.HardwareSerialLo = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.hardwareSerialHandler(e)
 	case 2:
@@ -970,7 +963,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		e.HardwareIdHi = client.Uint32(data[l : l+4])
 		l += 4
 		e.HardwareIdLo = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.hardwareIdWacomHandler(e)
 	case 3:
@@ -980,7 +972,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletToolCapabilityEvent
 		l := 0
 		e.Capability = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.capabilityHandler(e)
 	case 4:
@@ -1008,7 +999,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Tablet = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*Tablet)(nil)).(*Tablet)
 		l += 4
 		e.Surface = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Surface)(nil)).(*client.Surface)
-		l += 4
 
 		i.proximityInHandler(e)
 	case 7:
@@ -1025,7 +1015,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletToolDownEvent
 		l := 0
 		e.Serial = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.downHandler(e)
 	case 9:
@@ -1044,7 +1033,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		e.X = client.Fixed(data[l : l+4])
 		l += 4
 		e.Y = client.Fixed(data[l : l+4])
-		l += 4
 
 		i.motionHandler(e)
 	case 11:
@@ -1054,7 +1042,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletToolPressureEvent
 		l := 0
 		e.Pressure = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.pressureHandler(e)
 	case 12:
@@ -1064,7 +1051,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletToolDistanceEvent
 		l := 0
 		e.Distance = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.distanceHandler(e)
 	case 13:
@@ -1076,7 +1062,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		e.TiltX = int32(client.Uint32(data[l : l+4]))
 		l += 4
 		e.TiltY = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.tiltHandler(e)
 	case 14:
@@ -1086,7 +1071,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletToolRotationEvent
 		l := 0
 		e.Degrees = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.rotationHandler(e)
 	case 15:
@@ -1096,7 +1080,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletToolSliderEvent
 		l := 0
 		e.Position = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.sliderHandler(e)
 	case 16:
@@ -1108,7 +1091,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Degrees = int32(client.Uint32(data[l : l+4]))
 		l += 4
 		e.Clicks = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.wheelHandler(e)
 	case 17:
@@ -1122,7 +1104,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Button = client.Uint32(data[l : l+4])
 		l += 4
 		e.State = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.buttonHandler(e)
 	case 18:
@@ -1132,7 +1113,6 @@ func (i *TabletTool) Dispatch(opcode uint32, fd int, data []byte) {
 		var e TabletToolFrameEvent
 		l := 0
 		e.Time = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.frameHandler(e)
 	}
@@ -1285,7 +1265,6 @@ func (i *Tablet) Dispatch(opcode uint32, fd int, data []byte) {
 		nameLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Name = client.String(data[l : l+nameLen])
-		l += nameLen
 
 		i.nameHandler(e)
 	case 1:
@@ -1297,7 +1276,6 @@ func (i *Tablet) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Vid = client.Uint32(data[l : l+4])
 		l += 4
 		e.Pid = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.idHandler(e)
 	case 2:
@@ -1309,7 +1287,6 @@ func (i *Tablet) Dispatch(opcode uint32, fd int, data []byte) {
 		pathLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Path = client.String(data[l : l+pathLen])
-		l += pathLen
 
 		i.pathHandler(e)
 	case 3:

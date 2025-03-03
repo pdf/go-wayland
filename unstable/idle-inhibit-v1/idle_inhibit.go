@@ -102,7 +102,6 @@ func (i *IdleInhibitManager) CreateInhibitor(surface *client.Surface) (*IdleInhi
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }

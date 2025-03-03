@@ -128,7 +128,6 @@ func (i *DrmLeaseDevice) CreateLeaseRequest() (*DrmLeaseRequest, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -252,7 +251,6 @@ func (i *DrmLeaseDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DrmLeaseDeviceConnectorEvent
 		l := 0
 		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*DrmLeaseConnector)(nil)).(*DrmLeaseConnector)
-		l += 4
 
 		i.connectorHandler(e)
 	case 2:
@@ -423,7 +421,6 @@ func (i *DrmLeaseConnector) Dispatch(opcode uint32, fd int, data []byte) {
 		nameLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Name = client.String(data[l : l+nameLen])
-		l += nameLen
 
 		i.nameHandler(e)
 	case 1:
@@ -435,7 +432,6 @@ func (i *DrmLeaseConnector) Dispatch(opcode uint32, fd int, data []byte) {
 		descriptionLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Description = client.String(data[l : l+descriptionLen])
-		l += descriptionLen
 
 		i.descriptionHandler(e)
 	case 2:
@@ -445,7 +441,6 @@ func (i *DrmLeaseConnector) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DrmLeaseConnectorConnectorIdEvent
 		l := 0
 		e.ConnectorId = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.connectorIdHandler(e)
 	case 3:
@@ -509,7 +504,6 @@ func (i *DrmLeaseRequest) RequestConnector(connector *DrmLeaseConnector) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], connector.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -535,7 +529,6 @@ func (i *DrmLeaseRequest) Submit() (*DrmLease, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }

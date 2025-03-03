@@ -122,7 +122,6 @@ func (i *Presentation) Feedback(surface *client.Surface) (*PresentationFeedback,
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], callback.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return callback, err
 }
@@ -215,7 +214,6 @@ func (i *Presentation) Dispatch(opcode uint32, fd int, data []byte) {
 		var e PresentationClockIdEvent
 		l := 0
 		e.ClkId = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.clockIdHandler(e)
 	}
@@ -416,7 +414,6 @@ func (i *PresentationFeedback) Dispatch(opcode uint32, fd int, data []byte) {
 		var e PresentationFeedbackSyncOutputEvent
 		l := 0
 		e.Output = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Output)(nil)).(*client.Output)
-		l += 4
 
 		i.syncOutputHandler(e)
 	case 1:
@@ -438,7 +435,6 @@ func (i *PresentationFeedback) Dispatch(opcode uint32, fd int, data []byte) {
 		e.SeqLo = client.Uint32(data[l : l+4])
 		l += 4
 		e.Flags = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.presentedHandler(e)
 	case 2:

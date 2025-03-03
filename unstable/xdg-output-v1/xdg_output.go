@@ -81,7 +81,6 @@ func (i *OutputManager) GetXdgOutput(output *client.Output) (*Output, error) {
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], output.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -296,7 +295,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		e.X = int32(client.Uint32(data[l : l+4]))
 		l += 4
 		e.Y = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.logicalPositionHandler(e)
 	case 1:
@@ -308,7 +306,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Width = int32(client.Uint32(data[l : l+4]))
 		l += 4
 		e.Height = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.logicalSizeHandler(e)
 	case 2:
@@ -327,7 +324,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		nameLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Name = client.String(data[l : l+nameLen])
-		l += nameLen
 
 		i.nameHandler(e)
 	case 4:
@@ -339,7 +335,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		descriptionLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Description = client.String(data[l : l+descriptionLen])
-		l += descriptionLen
 
 		i.descriptionHandler(e)
 	}

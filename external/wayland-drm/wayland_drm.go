@@ -62,7 +62,6 @@ func (i *Drm) Authenticate(id uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(id))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -89,7 +88,6 @@ func (i *Drm) CreateBuffer(name uint32, width, height int32, stride, format uint
 	client.PutUint32(_reqBuf[l:l+4], uint32(stride))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(format))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -126,7 +124,6 @@ func (i *Drm) CreatePlanarBuffer(name uint32, width, height int32, format uint32
 	client.PutUint32(_reqBuf[l:l+4], uint32(offset2))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(stride2))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -161,7 +158,6 @@ func (i *Drm) CreatePrimeBuffer(name int, width, height int32, format uint32, of
 	client.PutUint32(_reqBuf[l:l+4], uint32(offset2))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(stride2))
-	l += 4
 	oob := unix.UnixRights(int(name))
 	err := i.Context().WriteMsg(_reqBuf[:], oob)
 	return id, err
@@ -625,7 +621,6 @@ func (i *Drm) Dispatch(opcode uint32, fd int, data []byte) {
 		nameLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Name = client.String(data[l : l+nameLen])
-		l += nameLen
 
 		i.deviceHandler(e)
 	case 1:
@@ -635,7 +630,6 @@ func (i *Drm) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DrmFormatEvent
 		l := 0
 		e.Format = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.formatHandler(e)
 	case 2:
@@ -652,7 +646,6 @@ func (i *Drm) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DrmCapabilitiesEvent
 		l := 0
 		e.Value = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.capabilitiesHandler(e)
 	}

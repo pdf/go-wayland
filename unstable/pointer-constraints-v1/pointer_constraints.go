@@ -147,13 +147,11 @@ func (i *PointerConstraints) LockPointer(surface *client.Surface, pointer *clien
 	l += 4
 	if region == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], region.ID())
-		l += 4
 	}
-	client.PutUint32(_reqBuf[l:l+4], uint32(lifetime))
 	l += 4
+	client.PutUint32(_reqBuf[l:l+4], uint32(lifetime))
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -200,13 +198,11 @@ func (i *PointerConstraints) ConfinePointer(surface *client.Surface, pointer *cl
 	l += 4
 	if region == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], region.ID())
-		l += 4
 	}
-	client.PutUint32(_reqBuf[l:l+4], uint32(lifetime))
 	l += 4
+	client.PutUint32(_reqBuf[l:l+4], uint32(lifetime))
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -389,7 +385,6 @@ func (i *LockedPointer) SetCursorPositionHint(surfaceX, surfaceY float64) error 
 	client.PutFixed(_reqBuf[l:l+4], surfaceX)
 	l += 4
 	client.PutFixed(_reqBuf[l:l+4], surfaceY)
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -414,10 +409,8 @@ func (i *LockedPointer) SetRegion(region *client.Region) error {
 	l += 4
 	if region == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], region.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
@@ -564,10 +557,8 @@ func (i *ConfinedPointer) SetRegion(region *client.Region) error {
 	l += 4
 	if region == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], region.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err

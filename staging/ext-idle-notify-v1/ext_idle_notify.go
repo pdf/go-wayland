@@ -97,7 +97,6 @@ func (i *IdleNotifier) GetIdleNotification(timeout uint32, seat *client.Seat) (*
 	client.PutUint32(_reqBuf[l:l+4], uint32(timeout))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -131,7 +130,6 @@ func (i *IdleNotifier) GetInputIdleNotification(timeout uint32, seat *client.Sea
 	client.PutUint32(_reqBuf[l:l+4], uint32(timeout))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }

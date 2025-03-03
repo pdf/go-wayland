@@ -136,7 +136,6 @@ func (i *InputMethodContext) CommitString(serial uint32, text string) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
 	client.PutString(_reqBuf[l:l+(4+textLen)], text, textLen)
-	l += (4 + textLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -168,7 +167,6 @@ func (i *InputMethodContext) PreeditString(serial uint32, text, commit string) e
 	client.PutString(_reqBuf[l:l+(4+textLen)], text, textLen)
 	l += (4 + textLen)
 	client.PutString(_reqBuf[l:l+(4+commitLen)], commit, commitLen)
-	l += (4 + commitLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -195,7 +193,6 @@ func (i *InputMethodContext) PreeditStyling(index, length, style uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(length))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(style))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -218,7 +215,6 @@ func (i *InputMethodContext) PreeditCursor(index int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(index))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -241,7 +237,6 @@ func (i *InputMethodContext) DeleteSurroundingText(index int32, length uint32) e
 	client.PutUint32(_reqBuf[l:l+4], uint32(index))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(length))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -270,7 +265,6 @@ func (i *InputMethodContext) CursorPosition(index, anchor int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(index))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(anchor))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -318,7 +312,6 @@ func (i *InputMethodContext) Keysym(serial, time, sym, state, modifiers uint32) 
 	client.PutUint32(_reqBuf[l:l+4], uint32(state))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(modifiers))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -340,7 +333,6 @@ func (i *InputMethodContext) GrabKeyboard() (*client.Keyboard, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], keyboard.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return keyboard, err
 }
@@ -374,7 +366,6 @@ func (i *InputMethodContext) Key(serial, time, key, state uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(key))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(state))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -409,7 +400,6 @@ func (i *InputMethodContext) Modifiers(serial, modsDepressed, modsLatched, modsL
 	client.PutUint32(_reqBuf[l:l+4], uint32(modsLocked))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(group))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -430,7 +420,6 @@ func (i *InputMethodContext) Language(serial uint32, language string) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
 	client.PutString(_reqBuf[l:l+(4+languageLen)], language, languageLen)
-	l += (4 + languageLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -450,7 +439,6 @@ func (i *InputMethodContext) TextDirection(serial, direction uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(direction))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -544,7 +532,6 @@ func (i *InputMethodContext) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Cursor = client.Uint32(data[l : l+4])
 		l += 4
 		e.Anchor = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.surroundingTextHandler(e)
 	case 1:
@@ -563,7 +550,6 @@ func (i *InputMethodContext) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Hint = client.Uint32(data[l : l+4])
 		l += 4
 		e.Purpose = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.contentTypeHandler(e)
 	case 3:
@@ -575,7 +561,6 @@ func (i *InputMethodContext) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Button = client.Uint32(data[l : l+4])
 		l += 4
 		e.Index = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.invokeActionHandler(e)
 	case 4:
@@ -585,7 +570,6 @@ func (i *InputMethodContext) Dispatch(opcode uint32, fd int, data []byte) {
 		var e InputMethodContextCommitStateEvent
 		l := 0
 		e.Serial = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.commitStateHandler(e)
 	case 5:
@@ -597,7 +581,6 @@ func (i *InputMethodContext) Dispatch(opcode uint32, fd int, data []byte) {
 		languageLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Language = client.String(data[l : l+languageLen])
-		l += languageLen
 
 		i.preferredLanguageHandler(e)
 	}
@@ -670,7 +653,6 @@ func (i *InputMethod) Dispatch(opcode uint32, fd int, data []byte) {
 		var e InputMethodActivateEvent
 		l := 0
 		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*InputMethodContext)(nil)).(*InputMethodContext)
-		l += 4
 
 		i.activateHandler(e)
 	case 1:
@@ -680,7 +662,6 @@ func (i *InputMethod) Dispatch(opcode uint32, fd int, data []byte) {
 		var e InputMethodDeactivateEvent
 		l := 0
 		e.Context = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*InputMethodContext)(nil)).(*InputMethodContext)
-		l += 4
 
 		i.deactivateHandler(e)
 	}
@@ -716,7 +697,6 @@ func (i *InputPanel) GetInputPanelSurface(surface *client.Surface) (*InputPanelS
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -755,7 +735,6 @@ func (i *InputPanelSurface) SetToplevel(output *client.Output, position uint32) 
 	client.PutUint32(_reqBuf[l:l+4], output.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(position))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }

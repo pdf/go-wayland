@@ -98,7 +98,6 @@ func (i *WpSinglePixelBufferManager) CreateU32RgbaBuffer(r, g, b, a uint32) (*cl
 	client.PutUint32(_reqBuf[l:l+4], uint32(b))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(a))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }

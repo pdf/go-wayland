@@ -167,19 +167,16 @@ func (i *FullscreenShell) PresentSurface(surface *client.Surface, method uint32,
 	l += 4
 	if surface == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], surface.ID())
-		l += 4
 	}
+	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(method))
 	l += 4
 	if output == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], output.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
@@ -245,7 +242,6 @@ func (i *FullscreenShell) PresentSurfaceForMode(surface *client.Surface, output 
 	client.PutUint32(_reqBuf[l:l+4], uint32(framerate))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], feedback.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return feedback, err
 }
@@ -433,7 +429,6 @@ func (i *FullscreenShell) Dispatch(opcode uint32, fd int, data []byte) {
 		var e FullscreenShellCapabilityEvent
 		l := 0
 		e.Capability = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.capabilityHandler(e)
 	}

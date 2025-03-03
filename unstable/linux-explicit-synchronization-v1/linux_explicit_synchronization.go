@@ -131,7 +131,6 @@ func (i *LinuxExplicitSynchronization) GetSynchronization(surface *client.Surfac
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -335,7 +334,6 @@ func (i *LinuxSurfaceSynchronization) GetRelease() (*LinuxBufferRelease, error) 
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], release.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return release, err
 }

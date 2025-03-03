@@ -219,7 +219,6 @@ func (i *LinuxDmabuf) CreateParams() (*LinuxBufferParams, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], paramsId.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return paramsId, err
 }
@@ -241,7 +240,6 @@ func (i *LinuxDmabuf) GetDefaultFeedback() (*LinuxDmabufFeedback, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -267,7 +265,6 @@ func (i *LinuxDmabuf) GetSurfaceFeedback(surface *client.Surface) (*LinuxDmabufF
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -341,7 +338,6 @@ func (i *LinuxDmabuf) Dispatch(opcode uint32, fd int, data []byte) {
 		var e LinuxDmabufFormatEvent
 		l := 0
 		e.Format = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.formatHandler(e)
 	case 1:
@@ -355,7 +351,6 @@ func (i *LinuxDmabuf) Dispatch(opcode uint32, fd int, data []byte) {
 		e.ModifierHi = client.Uint32(data[l : l+4])
 		l += 4
 		e.ModifierLo = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.modifierHandler(e)
 	}
@@ -469,7 +464,6 @@ func (i *LinuxBufferParams) Add(fd int, planeIdx, offset, stride, modifierHi, mo
 	client.PutUint32(_reqBuf[l:l+4], uint32(modifierHi))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(modifierLo))
-	l += 4
 	oob := unix.UnixRights(int(fd))
 	err := i.Context().WriteMsg(_reqBuf[:], oob)
 	return err
@@ -557,7 +551,6 @@ func (i *LinuxBufferParams) Create(width, height int32, format, flags uint32) er
 	client.PutUint32(_reqBuf[l:l+4], uint32(format))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(flags))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -611,7 +604,6 @@ func (i *LinuxBufferParams) CreateImmed(width, height int32, format, flags uint3
 	client.PutUint32(_reqBuf[l:l+4], uint32(format))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(flags))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return bufferId, err
 }
@@ -772,7 +764,6 @@ func (i *LinuxBufferParams) Dispatch(opcode uint32, fd int, data []byte) {
 		var e LinuxBufferParamsCreatedEvent
 		l := 0
 		e.Buffer = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*client.Buffer)(nil)).(*client.Buffer)
-		l += 4
 
 		i.createdHandler(e)
 	case 1:
@@ -1109,7 +1100,6 @@ func (i *LinuxDmabufFeedback) Dispatch(opcode uint32, fd int, data []byte) {
 		l := 0
 		e.Fd = fd
 		e.Size = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.formatTableHandler(e)
 	case 2:
@@ -1122,7 +1112,6 @@ func (i *LinuxDmabufFeedback) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Device = make([]byte, deviceLen)
 		copy(e.Device, data[l:l+deviceLen])
-		l += deviceLen
 
 		i.mainDeviceHandler(e)
 	case 3:
@@ -1142,7 +1131,6 @@ func (i *LinuxDmabufFeedback) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Device = make([]byte, deviceLen)
 		copy(e.Device, data[l:l+deviceLen])
-		l += deviceLen
 
 		i.trancheTargetDeviceHandler(e)
 	case 5:
@@ -1155,7 +1143,6 @@ func (i *LinuxDmabufFeedback) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Indices = make([]byte, indicesLen)
 		copy(e.Indices, data[l:l+indicesLen])
-		l += indicesLen
 
 		i.trancheFormatsHandler(e)
 	case 6:
@@ -1165,7 +1152,6 @@ func (i *LinuxDmabufFeedback) Dispatch(opcode uint32, fd int, data []byte) {
 		var e LinuxDmabufFeedbackTrancheFlagsEvent
 		l := 0
 		e.Flags = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.trancheFlagsHandler(e)
 	}

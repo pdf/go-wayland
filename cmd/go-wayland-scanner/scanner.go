@@ -411,6 +411,7 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 	for i, arg := range r.Args {
 		argNameLower := toLowerCamel(arg.Name)
 
+		size := ""
 		switch arg.Type {
 		case "object":
 			if arg.AllowNull {
@@ -420,14 +421,14 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 				} else {
 					fmt.Fprintf(w, "client.PutUint32(_reqBuf[l:l+4], 0)\n")
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 				fmt.Fprintf(w, "} else {\n")
 				if protocol.Name == "wayland" {
 					fmt.Fprintf(w, "PutUint32(_reqBuf[l:l+4], %s.ID())\n", argNameLower)
 				} else {
 					fmt.Fprintf(w, "client.PutUint32(_reqBuf[l:l+4], %s.ID())\n", argNameLower)
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 				fmt.Fprintf(w, "}\n")
 			} else {
 				if protocol.Name == "wayland" {
@@ -435,7 +436,7 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 				} else {
 					fmt.Fprintf(w, "client.PutUint32(_reqBuf[l:l+4], %s.ID())\n", argNameLower)
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 			}
 
 		case "new_id":
@@ -445,7 +446,7 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 				} else {
 					fmt.Fprintf(w, "client.PutUint32(_reqBuf[l:l+4], %s.ID())\n", argNameLower)
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 			} else {
 				if protocol.Name == "wayland" {
 					fmt.Fprintf(w, "PutString(_reqBuf[l:l+(4 + ifaceLen)], iface, ifaceLen)\n")
@@ -466,7 +467,7 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 				} else {
 					fmt.Fprintf(w, "client.PutUint32(_reqBuf[l:l+4], id.ID())\n")
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 			}
 
 		case "int", "uint":
@@ -475,7 +476,7 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 			} else {
 				fmt.Fprintf(w, "client.PutUint32(_reqBuf[l:l+4], uint32(%s))\n", argNameLower)
 			}
-			fmt.Fprintf(w, "l += 4\n")
+			size = "4"
 
 		case "fixed":
 			if protocol.Name == "wayland" {
@@ -483,7 +484,7 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 			} else {
 				fmt.Fprintf(w, "client.PutFixed(_reqBuf[l:l+4], %s)\n", argNameLower)
 			}
-			fmt.Fprintf(w, "l += 4\n")
+			size = "4"
 
 		case "string":
 			if protocol.Name == "wayland" {
@@ -491,7 +492,7 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 			} else {
 				fmt.Fprintf(w, "client.PutString(_reqBuf[l:l+(4 + %sLen)], %s, %sLen)\n", argNameLower, argNameLower, argNameLower)
 			}
-			fmt.Fprintf(w, "l += (4 + %sLen)\n", argNameLower)
+			size = fmt.Sprintf("(4+ %sLen)", argNameLower)
 
 		case "array":
 			if protocol.Name == "wayland" {
@@ -500,9 +501,14 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 				fmt.Fprintf(w, "client.PutArray(_reqBuf[l:l+(4 + %sLen)], %s)\n", argNameLower, argNameLower)
 			}
 			fmt.Fprintf(w, "l += %sLen\n", argNameLower)
+			size = fmt.Sprintf("(%sLen)", argNameLower)
 
 		case "fd":
 			fdIndex = i
+		}
+
+		if len(size) > 0 && i != len(r.Args)-1 {
+			fmt.Fprintf(w, "l += %s\n", size)
 		}
 	}
 
@@ -663,10 +669,11 @@ func writeEventDispatcher(w io.Writer, ifaceName string, v Interface) {
 			fmt.Fprintf(w, "l := 0\n")
 		}
 
-		for _, arg := range e.Args {
+		for i, arg := range e.Args {
 			argName := toCamel(arg.Name)
 			argNameLower := toLowerCamel(arg.Name)
 
+			size := ""
 			switch arg.Type {
 			case "object", "new_id":
 				if arg.Interface != "" {
@@ -692,7 +699,7 @@ func writeEventDispatcher(w io.Writer, ifaceName string, v Interface) {
 						fmt.Fprintf(w, "e.%s = i.Context().GetOrRegister(client.Uint32(data[l :l+4]), (*client.BaseProxy)(nil))\n", argName)
 					}
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 
 			case "fd":
 				fmt.Fprintf(w, "e.%s = fd\n", argName)
@@ -703,7 +710,7 @@ func writeEventDispatcher(w io.Writer, ifaceName string, v Interface) {
 				} else {
 					fmt.Fprintf(w, "e.%s = client.Uint32(data[l : l+4])\n", argName)
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 
 			case "int":
 				if protocol.Name == "wayland" {
@@ -711,7 +718,7 @@ func writeEventDispatcher(w io.Writer, ifaceName string, v Interface) {
 				} else {
 					fmt.Fprintf(w, "e.%s = int32(client.Uint32(data[l : l+4]))\n", argName)
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 
 			case "fixed":
 				if protocol.Name == "wayland" {
@@ -719,7 +726,7 @@ func writeEventDispatcher(w io.Writer, ifaceName string, v Interface) {
 				} else {
 					fmt.Fprintf(w, "e.%s = client.Fixed(data[l : l+4])\n", argName)
 				}
-				fmt.Fprintf(w, "l += 4\n")
+				size = "4"
 
 			case "string":
 				if protocol.Name == "wayland" {
@@ -733,7 +740,7 @@ func writeEventDispatcher(w io.Writer, ifaceName string, v Interface) {
 				} else {
 					fmt.Fprintf(w, "e.%s = client.String(data[l : l+%sLen])\n", argName, argNameLower)
 				}
-				fmt.Fprintf(w, "l += %sLen\n", argNameLower)
+				size = fmt.Sprintf("%sLen", argNameLower)
 
 			case "array":
 				if protocol.Name == "wayland" {
@@ -744,7 +751,10 @@ func writeEventDispatcher(w io.Writer, ifaceName string, v Interface) {
 				fmt.Fprintf(w, "l += 4\n")
 				fmt.Fprintf(w, "e.%s = make([]byte, %sLen)\n", argName, argNameLower)
 				fmt.Fprintf(w, "copy(e.%s, data[l:l+%sLen])\n", argName, argNameLower)
-				fmt.Fprintf(w, "l += %sLen\n", argNameLower)
+				size = fmt.Sprintf("%sLen", argNameLower)
+			}
+			if len(size) > 0 && i != len(e.Args)-1 {
+				fmt.Fprintf(w, "l += %s\n", size)
 			}
 		}
 

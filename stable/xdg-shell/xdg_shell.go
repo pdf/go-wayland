@@ -96,7 +96,6 @@ func (i *WmBase) CreatePositioner() (*Positioner, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -129,7 +128,6 @@ func (i *WmBase) GetXdgSurface(surface *client.Surface) (*Surface, error) {
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -151,7 +149,6 @@ func (i *WmBase) Pong(serial uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -256,7 +253,6 @@ func (i *WmBase) Dispatch(opcode uint32, fd int, data []byte) {
 		var e WmBasePingEvent
 		l := 0
 		e.Serial = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.pingHandler(e)
 	}
@@ -353,7 +349,6 @@ func (i *Positioner) SetSize(width, height int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -391,7 +386,6 @@ func (i *Positioner) SetAnchorRect(x, y, width, height int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -416,7 +410,6 @@ func (i *Positioner) SetAnchor(anchor uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(anchor))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -442,7 +435,6 @@ func (i *Positioner) SetGravity(gravity uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(gravity))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -474,7 +466,6 @@ func (i *Positioner) SetConstraintAdjustment(constraintAdjustment uint32) error 
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(constraintAdjustment))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -507,7 +498,6 @@ func (i *Positioner) SetOffset(x, y int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(x))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(y))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -557,7 +547,6 @@ func (i *Positioner) SetParentSize(parentWidth, parentHeight int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(parentWidth))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(parentHeight))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -580,7 +569,6 @@ func (i *Positioner) SetParentConfigure(serial uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -972,7 +960,6 @@ func (i *Surface) GetToplevel() (*Toplevel, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -1001,13 +988,11 @@ func (i *Surface) GetPopup(parent *Surface, positioner *Positioner) (*Popup, err
 	l += 4
 	if parent == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], parent.ID())
-		l += 4
 	}
-	client.PutUint32(_reqBuf[l:l+4], positioner.ID())
 	l += 4
+	client.PutUint32(_reqBuf[l:l+4], positioner.ID())
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -1067,7 +1052,6 @@ func (i *Surface) SetWindowGeometry(x, y, width, height int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1118,7 +1102,6 @@ func (i *Surface) AckConfigure(serial uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1220,7 +1203,6 @@ func (i *Surface) Dispatch(opcode uint32, fd int, data []byte) {
 		var e SurfaceConfigureEvent
 		l := 0
 		e.Serial = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.configureHandler(e)
 	}
@@ -1337,10 +1319,8 @@ func (i *Toplevel) SetParent(parent *Toplevel) error {
 	l += 4
 	if parent == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], parent.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
@@ -1366,7 +1346,6 @@ func (i *Toplevel) SetTitle(title string) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutString(_reqBuf[l:l+(4+titleLen)], title, titleLen)
-	l += (4 + titleLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -1407,7 +1386,6 @@ func (i *Toplevel) SetAppId(appId string) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutString(_reqBuf[l:l+(4+appIdLen)], appId, appIdLen)
-	l += (4 + appIdLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -1447,7 +1425,6 @@ func (i *Toplevel) ShowWindowMenu(seat *client.Seat, serial uint32, x, y int32) 
 	client.PutUint32(_reqBuf[l:l+4], uint32(x))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(y))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1485,7 +1462,6 @@ func (i *Toplevel) Move(seat *client.Seat, serial uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1541,7 +1517,6 @@ func (i *Toplevel) Resize(seat *client.Seat, serial, edges uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(edges))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1593,7 +1568,6 @@ func (i *Toplevel) SetMaxSize(width, height int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1645,7 +1619,6 @@ func (i *Toplevel) SetMinSize(width, height int32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1756,10 +1729,8 @@ func (i *Toplevel) SetFullscreen(output *client.Output) error {
 	l += 4
 	if output == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], output.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
@@ -2189,7 +2160,6 @@ func (i *Toplevel) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.States = make([]byte, statesLen)
 		copy(e.States, data[l:l+statesLen])
-		l += statesLen
 
 		i.configureHandler(e)
 	case 1:
@@ -2208,7 +2178,6 @@ func (i *Toplevel) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Width = int32(client.Uint32(data[l : l+4]))
 		l += 4
 		e.Height = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.configureBoundsHandler(e)
 	case 3:
@@ -2221,7 +2190,6 @@ func (i *Toplevel) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Capabilities = make([]byte, capabilitiesLen)
 		copy(e.Capabilities, data[l:l+capabilitiesLen])
-		l += capabilitiesLen
 
 		i.wmCapabilitiesHandler(e)
 	}
@@ -2367,7 +2335,6 @@ func (i *Popup) Grab(seat *client.Seat, serial uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -2411,7 +2378,6 @@ func (i *Popup) Reposition(positioner *Positioner, token uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], positioner.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(token))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -2528,7 +2494,6 @@ func (i *Popup) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Width = int32(client.Uint32(data[l : l+4]))
 		l += 4
 		e.Height = int32(client.Uint32(data[l : l+4]))
-		l += 4
 
 		i.configureHandler(e)
 	case 1:
@@ -2545,7 +2510,6 @@ func (i *Popup) Dispatch(opcode uint32, fd int, data []byte) {
 		var e PopupRepositionedEvent
 		l := 0
 		e.Token = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.repositionedHandler(e)
 	}

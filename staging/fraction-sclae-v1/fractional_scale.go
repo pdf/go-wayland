@@ -85,7 +85,6 @@ func (i *FractionalScaleManager) GetFractionalScale(surface *client.Surface) (*F
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -182,7 +181,6 @@ func (i *FractionalScale) Dispatch(opcode uint32, fd int, data []byte) {
 		var e FractionalScalePreferredScaleEvent
 		l := 0
 		e.Scale = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.preferredScaleHandler(e)
 	}

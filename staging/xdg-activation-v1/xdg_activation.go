@@ -87,7 +87,6 @@ func (i *Activation) GetActivationToken() (*ActivationToken, error) {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -120,7 +119,6 @@ func (i *Activation) Activate(token string, surface *client.Surface) error {
 	client.PutString(_reqBuf[l:l+(4+tokenLen)], token, tokenLen)
 	l += (4 + tokenLen)
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -185,7 +183,6 @@ func (i *ActivationToken) SetSerial(serial uint32, seat *client.Seat) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -209,7 +206,6 @@ func (i *ActivationToken) SetAppId(appId string) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutString(_reqBuf[l:l+(4+appIdLen)], appId, appIdLen)
-	l += (4 + appIdLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -235,7 +231,6 @@ func (i *ActivationToken) SetSurface(surface *client.Surface) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -330,7 +325,6 @@ func (i *ActivationToken) Dispatch(opcode uint32, fd int, data []byte) {
 		tokenLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Token = client.String(data[l : l+tokenLen])
-		l += tokenLen
 
 		i.doneHandler(e)
 	}

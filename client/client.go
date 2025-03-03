@@ -77,7 +77,6 @@ func (i *Display) Sync() (*Callback, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], callback.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return callback, err
 }
@@ -104,7 +103,6 @@ func (i *Display) GetRegistry() (*Registry, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], registry.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return registry, err
 }
@@ -218,7 +216,6 @@ func (i *Display) Dispatch(opcode uint32, fd int, data []byte) {
 		messageLen := PaddedLen(int(Uint32(data[l : l+4])))
 		l += 4
 		e.Message = String(data[l : l+messageLen])
-		l += messageLen
 
 		i.errorHandler(e)
 	case 1:
@@ -228,7 +225,6 @@ func (i *Display) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DisplayDeleteIdEvent
 		l := 0
 		e.Id = Uint32(data[l : l+4])
-		l += 4
 
 		i.deleteIdHandler(e)
 	}
@@ -313,7 +309,6 @@ func (i *Registry) Bind(name uint32, iface string, version uint32, id Proxy) err
 	PutUint32(_reqBuf[l:l+4], uint32(version))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -379,7 +374,6 @@ func (i *Registry) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Interface = String(data[l : l+interfaceLen])
 		l += interfaceLen
 		e.Version = Uint32(data[l : l+4])
-		l += 4
 
 		i.globalHandler(e)
 	case 1:
@@ -389,7 +383,6 @@ func (i *Registry) Dispatch(opcode uint32, fd int, data []byte) {
 		var e RegistryGlobalRemoveEvent
 		l := 0
 		e.Name = Uint32(data[l : l+4])
-		l += 4
 
 		i.globalRemoveHandler(e)
 	}
@@ -447,7 +440,6 @@ func (i *Callback) Dispatch(opcode uint32, fd int, data []byte) {
 		var e CallbackDoneEvent
 		l := 0
 		e.CallbackData = Uint32(data[l : l+4])
-		l += 4
 
 		i.doneHandler(e)
 	}
@@ -487,7 +479,6 @@ func (i *Compositor) CreateSurface() (*Surface, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -506,7 +497,6 @@ func (i *Compositor) CreateRegion() (*Region, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -584,7 +574,6 @@ func (i *ShmPool) CreateBuffer(offset, width, height, stride int32, format uint3
 	PutUint32(_reqBuf[l:l+4], uint32(stride))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(format))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -634,7 +623,6 @@ func (i *ShmPool) Resize(size int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(size))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -695,7 +683,6 @@ func (i *Shm) CreatePool(fd int, size int32) (*ShmPool, error) {
 	PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(size))
-	l += 4
 	oob := unix.UnixRights(int(fd))
 	err := i.Context().WriteMsg(_reqBuf[:], oob)
 	return id, err
@@ -1552,7 +1539,6 @@ func (i *Shm) Dispatch(opcode uint32, fd int, data []byte) {
 		var e ShmFormatEvent
 		l := 0
 		e.Format = Uint32(data[l : l+4])
-		l += 4
 
 		i.formatHandler(e)
 	}
@@ -1718,7 +1704,6 @@ func (i *DataOffer) Accept(serial uint32, mimeType string) error {
 	PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
 	PutString(_reqBuf[l:l+(4+mimeTypeLen)], mimeType, mimeTypeLen)
-	l += (4 + mimeTypeLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -1854,7 +1839,6 @@ func (i *DataOffer) SetActions(dndActions, preferredAction uint32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(dndActions))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(preferredAction))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1995,7 +1979,6 @@ func (i *DataOffer) Dispatch(opcode uint32, fd int, data []byte) {
 		mimeTypeLen := PaddedLen(int(Uint32(data[l : l+4])))
 		l += 4
 		e.MimeType = String(data[l : l+mimeTypeLen])
-		l += mimeTypeLen
 
 		i.offerHandler(e)
 	case 1:
@@ -2005,7 +1988,6 @@ func (i *DataOffer) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DataOfferSourceActionsEvent
 		l := 0
 		e.SourceActions = Uint32(data[l : l+4])
-		l += 4
 
 		i.sourceActionsHandler(e)
 	case 2:
@@ -2015,7 +1997,6 @@ func (i *DataOffer) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DataOfferActionEvent
 		l := 0
 		e.DndAction = Uint32(data[l : l+4])
-		l += 4
 
 		i.actionHandler(e)
 	}
@@ -2067,7 +2048,6 @@ func (i *DataSource) Offer(mimeType string) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutString(_reqBuf[l:l+(4+mimeTypeLen)], mimeType, mimeTypeLen)
-	l += (4 + mimeTypeLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -2116,7 +2096,6 @@ func (i *DataSource) SetActions(dndActions uint32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(dndActions))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -2302,7 +2281,6 @@ func (i *DataSource) Dispatch(opcode uint32, fd int, data []byte) {
 		mimeTypeLen := PaddedLen(int(Uint32(data[l : l+4])))
 		l += 4
 		e.MimeType = String(data[l : l+mimeTypeLen])
-		l += mimeTypeLen
 
 		i.targetHandler(e)
 	case 1:
@@ -2349,7 +2327,6 @@ func (i *DataSource) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DataSourceActionEvent
 		l := 0
 		e.DndAction = Uint32(data[l : l+4])
-		l += 4
 
 		i.actionHandler(e)
 	}
@@ -2432,22 +2409,19 @@ func (i *DataDevice) StartDrag(source *DataSource, origin, icon *Surface, serial
 	l += 4
 	if source == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], source.ID())
-		l += 4
 	}
+	l += 4
 	PutUint32(_reqBuf[l:l+4], origin.ID())
 	l += 4
 	if icon == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], icon.ID())
-		l += 4
 	}
-	PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
+	PutUint32(_reqBuf[l:l+4], uint32(serial))
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -2476,13 +2450,11 @@ func (i *DataDevice) SetSelection(source *DataSource, serial uint32) error {
 	l += 4
 	if source == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], source.ID())
-		l += 4
 	}
-	PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
+	PutUint32(_reqBuf[l:l+4], uint32(serial))
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -2666,7 +2638,6 @@ func (i *DataDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DataDeviceDataOfferEvent
 		l := 0
 		e.Id = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*DataOffer)(nil)).(*DataOffer)
-		l += 4
 
 		i.dataOfferHandler(e)
 	case 1:
@@ -2684,7 +2655,6 @@ func (i *DataDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Y = Fixed(data[l : l+4])
 		l += 4
 		e.Id = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*DataOffer)(nil)).(*DataOffer)
-		l += 4
 
 		i.enterHandler(e)
 	case 2:
@@ -2705,7 +2675,6 @@ func (i *DataDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		e.X = Fixed(data[l : l+4])
 		l += 4
 		e.Y = Fixed(data[l : l+4])
-		l += 4
 
 		i.motionHandler(e)
 	case 4:
@@ -2722,7 +2691,6 @@ func (i *DataDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		var e DataDeviceSelectionEvent
 		l := 0
 		e.Id = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*DataOffer)(nil)).(*DataOffer)
-		l += 4
 
 		i.selectionHandler(e)
 	}
@@ -2776,7 +2744,6 @@ func (i *DataDeviceManager) CreateDataSource() (*DataSource, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -2799,7 +2766,6 @@ func (i *DataDeviceManager) GetDataDevice(seat *Seat) (*DataDevice, error) {
 	PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], seat.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -2935,7 +2901,6 @@ func (i *Shell) GetShellSurface(surface *Surface) (*ShellSurface, error) {
 	PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -3030,7 +2995,6 @@ func (i *ShellSurface) Pong(serial uint32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(serial))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3057,7 +3021,6 @@ func (i *ShellSurface) Move(seat *Seat, serial uint32) error {
 	PutUint32(_reqBuf[l:l+4], seat.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(serial))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3087,7 +3050,6 @@ func (i *ShellSurface) Resize(seat *Seat, serial, edges uint32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(edges))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3140,7 +3102,6 @@ func (i *ShellSurface) SetTransient(parent *Surface, x, y int32, flags uint32) e
 	PutUint32(_reqBuf[l:l+4], uint32(y))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(flags))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3199,10 +3160,8 @@ func (i *ShellSurface) SetFullscreen(method, framerate uint32, output *Output) e
 	l += 4
 	if output == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], output.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
@@ -3256,7 +3215,6 @@ func (i *ShellSurface) SetPopup(seat *Seat, serial uint32, parent *Surface, x, y
 	PutUint32(_reqBuf[l:l+4], uint32(y))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(flags))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3294,10 +3252,8 @@ func (i *ShellSurface) SetMaximized(output *Output) error {
 	l += 4
 	if output == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], output.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
@@ -3325,7 +3281,6 @@ func (i *ShellSurface) SetTitle(title string) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutString(_reqBuf[l:l+(4+titleLen)], title, titleLen)
-	l += (4 + titleLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -3351,7 +3306,6 @@ func (i *ShellSurface) SetClass(class string) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutString(_reqBuf[l:l+(4+classLen)], class, classLen)
-	l += (4 + classLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
@@ -3596,7 +3550,6 @@ func (i *ShellSurface) Dispatch(opcode uint32, fd int, data []byte) {
 		var e ShellSurfacePingEvent
 		l := 0
 		e.Serial = Uint32(data[l : l+4])
-		l += 4
 
 		i.pingHandler(e)
 	case 1:
@@ -3610,7 +3563,6 @@ func (i *ShellSurface) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Width = int32(Uint32(data[l : l+4]))
 		l += 4
 		e.Height = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.configureHandler(e)
 	case 2:
@@ -3823,15 +3775,13 @@ func (i *Surface) Attach(buffer *Buffer, x, y int32) error {
 	l += 4
 	if buffer == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], buffer.ID())
-		l += 4
 	}
+	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(x))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(y))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3880,7 +3830,6 @@ func (i *Surface) Damage(x, y, width, height int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3930,7 +3879,6 @@ func (i *Surface) Frame() (*Callback, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], callback.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return callback, err
 }
@@ -3974,10 +3922,8 @@ func (i *Surface) SetOpaqueRegion(region *Region) error {
 	l += 4
 	if region == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], region.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
@@ -4020,10 +3966,8 @@ func (i *Surface) SetInputRegion(region *Region) error {
 	l += 4
 	if region == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], region.ID())
-		l += 4
 	}
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
@@ -4108,7 +4052,6 @@ func (i *Surface) SetBufferTransform(transform int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(transform))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -4150,7 +4093,6 @@ func (i *Surface) SetBufferScale(scale int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(scale))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -4210,7 +4152,6 @@ func (i *Surface) DamageBuffer(x, y, width, height int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -4244,7 +4185,6 @@ func (i *Surface) Offset(x, y int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(x))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(y))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -4397,7 +4337,6 @@ func (i *Surface) Dispatch(opcode uint32, fd int, data []byte) {
 		var e SurfaceEnterEvent
 		l := 0
 		e.Output = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Output)(nil)).(*Output)
-		l += 4
 
 		i.enterHandler(e)
 	case 1:
@@ -4407,7 +4346,6 @@ func (i *Surface) Dispatch(opcode uint32, fd int, data []byte) {
 		var e SurfaceLeaveEvent
 		l := 0
 		e.Output = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Output)(nil)).(*Output)
-		l += 4
 
 		i.leaveHandler(e)
 	case 2:
@@ -4417,7 +4355,6 @@ func (i *Surface) Dispatch(opcode uint32, fd int, data []byte) {
 		var e SurfacePreferredBufferScaleEvent
 		l := 0
 		e.Factor = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.preferredBufferScaleHandler(e)
 	case 3:
@@ -4427,7 +4364,6 @@ func (i *Surface) Dispatch(opcode uint32, fd int, data []byte) {
 		var e SurfacePreferredBufferTransformEvent
 		l := 0
 		e.Transform = Uint32(data[l : l+4])
-		l += 4
 
 		i.preferredBufferTransformHandler(e)
 	}
@@ -4478,7 +4414,6 @@ func (i *Seat) GetPointer() (*Pointer, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -4504,7 +4439,6 @@ func (i *Seat) GetKeyboard() (*Keyboard, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -4530,7 +4464,6 @@ func (i *Seat) GetTouch() (*Touch, error) {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -4703,7 +4636,6 @@ func (i *Seat) Dispatch(opcode uint32, fd int, data []byte) {
 		var e SeatCapabilitiesEvent
 		l := 0
 		e.Capabilities = Uint32(data[l : l+4])
-		l += 4
 
 		i.capabilitiesHandler(e)
 	case 1:
@@ -4715,7 +4647,6 @@ func (i *Seat) Dispatch(opcode uint32, fd int, data []byte) {
 		nameLen := PaddedLen(int(Uint32(data[l : l+4])))
 		l += 4
 		e.Name = String(data[l : l+nameLen])
-		l += nameLen
 
 		i.nameHandler(e)
 	}
@@ -4815,15 +4746,13 @@ func (i *Pointer) SetCursor(serial uint32, surface *Surface, hotspotX, hotspotY 
 	l += 4
 	if surface == nil {
 		PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		PutUint32(_reqBuf[l:l+4], surface.ID())
-		l += 4
 	}
+	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(hotspotX))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(hotspotY))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -5423,7 +5352,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.SurfaceX = Fixed(data[l : l+4])
 		l += 4
 		e.SurfaceY = Fixed(data[l : l+4])
-		l += 4
 
 		i.enterHandler(e)
 	case 1:
@@ -5435,7 +5363,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Serial = Uint32(data[l : l+4])
 		l += 4
 		e.Surface = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Surface)(nil)).(*Surface)
-		l += 4
 
 		i.leaveHandler(e)
 	case 2:
@@ -5449,7 +5376,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.SurfaceX = Fixed(data[l : l+4])
 		l += 4
 		e.SurfaceY = Fixed(data[l : l+4])
-		l += 4
 
 		i.motionHandler(e)
 	case 3:
@@ -5465,7 +5391,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Button = Uint32(data[l : l+4])
 		l += 4
 		e.State = Uint32(data[l : l+4])
-		l += 4
 
 		i.buttonHandler(e)
 	case 4:
@@ -5479,7 +5404,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Axis = Uint32(data[l : l+4])
 		l += 4
 		e.Value = Fixed(data[l : l+4])
-		l += 4
 
 		i.axisHandler(e)
 	case 5:
@@ -5496,7 +5420,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		var e PointerAxisSourceEvent
 		l := 0
 		e.AxisSource = Uint32(data[l : l+4])
-		l += 4
 
 		i.axisSourceHandler(e)
 	case 7:
@@ -5508,7 +5431,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Time = Uint32(data[l : l+4])
 		l += 4
 		e.Axis = Uint32(data[l : l+4])
-		l += 4
 
 		i.axisStopHandler(e)
 	case 8:
@@ -5520,7 +5442,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Axis = Uint32(data[l : l+4])
 		l += 4
 		e.Discrete = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.axisDiscreteHandler(e)
 	case 9:
@@ -5532,7 +5453,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Axis = Uint32(data[l : l+4])
 		l += 4
 		e.Value120 = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.axisValue120Handler(e)
 	case 10:
@@ -5544,7 +5464,6 @@ func (i *Pointer) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Axis = Uint32(data[l : l+4])
 		l += 4
 		e.Direction = Uint32(data[l : l+4])
-		l += 4
 
 		i.axisRelativeDirectionHandler(e)
 	}
@@ -5855,7 +5774,6 @@ func (i *Keyboard) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Fd = fd
 		e.Size = Uint32(data[l : l+4])
-		l += 4
 
 		i.keymapHandler(e)
 	case 1:
@@ -5872,7 +5790,6 @@ func (i *Keyboard) Dispatch(opcode uint32, fd int, data []byte) {
 		l += 4
 		e.Keys = make([]byte, keysLen)
 		copy(e.Keys, data[l:l+keysLen])
-		l += keysLen
 
 		i.enterHandler(e)
 	case 2:
@@ -5884,7 +5801,6 @@ func (i *Keyboard) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Serial = Uint32(data[l : l+4])
 		l += 4
 		e.Surface = i.Context().GetOrRegister(Uint32(data[l:l+4]), (*Surface)(nil)).(*Surface)
-		l += 4
 
 		i.leaveHandler(e)
 	case 3:
@@ -5900,7 +5816,6 @@ func (i *Keyboard) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Key = Uint32(data[l : l+4])
 		l += 4
 		e.State = Uint32(data[l : l+4])
-		l += 4
 
 		i.keyHandler(e)
 	case 4:
@@ -5918,7 +5833,6 @@ func (i *Keyboard) Dispatch(opcode uint32, fd int, data []byte) {
 		e.ModsLocked = Uint32(data[l : l+4])
 		l += 4
 		e.Group = Uint32(data[l : l+4])
-		l += 4
 
 		i.modifiersHandler(e)
 	case 5:
@@ -5930,7 +5844,6 @@ func (i *Keyboard) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Rate = int32(Uint32(data[l : l+4]))
 		l += 4
 		e.Delay = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.repeatInfoHandler(e)
 	}
@@ -6172,7 +6085,6 @@ func (i *Touch) Dispatch(opcode uint32, fd int, data []byte) {
 		e.X = Fixed(data[l : l+4])
 		l += 4
 		e.Y = Fixed(data[l : l+4])
-		l += 4
 
 		i.downHandler(e)
 	case 1:
@@ -6186,7 +6098,6 @@ func (i *Touch) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Time = Uint32(data[l : l+4])
 		l += 4
 		e.Id = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.upHandler(e)
 	case 2:
@@ -6202,7 +6113,6 @@ func (i *Touch) Dispatch(opcode uint32, fd int, data []byte) {
 		e.X = Fixed(data[l : l+4])
 		l += 4
 		e.Y = Fixed(data[l : l+4])
-		l += 4
 
 		i.motionHandler(e)
 	case 3:
@@ -6230,7 +6140,6 @@ func (i *Touch) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Major = Fixed(data[l : l+4])
 		l += 4
 		e.Minor = Fixed(data[l : l+4])
-		l += 4
 
 		i.shapeHandler(e)
 	case 6:
@@ -6242,7 +6151,6 @@ func (i *Touch) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Id = int32(Uint32(data[l : l+4]))
 		l += 4
 		e.Orientation = Fixed(data[l : l+4])
-		l += 4
 
 		i.orientationHandler(e)
 	}
@@ -6708,7 +6616,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Model = String(data[l : l+modelLen])
 		l += modelLen
 		e.Transform = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.geometryHandler(e)
 	case 1:
@@ -6724,7 +6631,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		e.Height = int32(Uint32(data[l : l+4]))
 		l += 4
 		e.Refresh = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.modeHandler(e)
 	case 2:
@@ -6741,7 +6647,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		var e OutputScaleEvent
 		l := 0
 		e.Factor = int32(Uint32(data[l : l+4]))
-		l += 4
 
 		i.scaleHandler(e)
 	case 4:
@@ -6753,7 +6658,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		nameLen := PaddedLen(int(Uint32(data[l : l+4])))
 		l += 4
 		e.Name = String(data[l : l+nameLen])
-		l += nameLen
 
 		i.nameHandler(e)
 	case 5:
@@ -6765,7 +6669,6 @@ func (i *Output) Dispatch(opcode uint32, fd int, data []byte) {
 		descriptionLen := PaddedLen(int(Uint32(data[l : l+4])))
 		l += 4
 		e.Description = String(data[l : l+descriptionLen])
-		l += descriptionLen
 
 		i.descriptionHandler(e)
 	}
@@ -6834,7 +6737,6 @@ func (i *Region) Add(x, y, width, height int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -6863,7 +6765,6 @@ func (i *Region) Subtract(x, y, width, height int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(width))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(height))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -6978,7 +6879,6 @@ func (i *Subcompositor) GetSubsurface(surface, parent *Surface) (*Subsurface, er
 	PutUint32(_reqBuf[l:l+4], surface.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], parent.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -7188,7 +7088,6 @@ func (i *Subsurface) SetPosition(x, y int32) error {
 	PutUint32(_reqBuf[l:l+4], uint32(x))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(y))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -7220,7 +7119,6 @@ func (i *Subsurface) PlaceAbove(sibling *Surface) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], sibling.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -7241,7 +7139,6 @@ func (i *Subsurface) PlaceBelow(sibling *Surface) error {
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	PutUint32(_reqBuf[l:l+4], sibling.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }

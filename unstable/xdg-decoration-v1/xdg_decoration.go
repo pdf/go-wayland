@@ -130,7 +130,6 @@ func (i *DecorationManager) GetToplevelDecoration(toplevel *xdg_shell.Toplevel) 
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], toplevel.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -215,7 +214,6 @@ func (i *ToplevelDecoration) SetMode(mode uint32) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(mode))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -353,7 +351,6 @@ func (i *ToplevelDecoration) Dispatch(opcode uint32, fd int, data []byte) {
 		var e ToplevelDecorationConfigureEvent
 		l := 0
 		e.Mode = client.Uint32(data[l : l+4])
-		l += 4
 
 		i.configureHandler(e)
 	}

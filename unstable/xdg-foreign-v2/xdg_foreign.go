@@ -91,7 +91,6 @@ func (i *Exporter) ExportToplevel(surface *client.Surface) (*Exported, error) {
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -190,7 +189,6 @@ func (i *Importer) ImportToplevel(handle string) (*Imported, error) {
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutString(_reqBuf[l:l+(4+handleLen)], handle, handleLen)
-	l += (4 + handleLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return id, err
 }
@@ -264,7 +262,6 @@ func (i *Exported) Dispatch(opcode uint32, fd int, data []byte) {
 		handleLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.Handle = client.String(data[l : l+handleLen])
-		l += handleLen
 
 		i.handleHandler(e)
 	}
@@ -329,7 +326,6 @@ func (i *Imported) SetParentOf(surface *client.Surface) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], surface.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }

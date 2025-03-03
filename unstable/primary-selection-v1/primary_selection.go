@@ -68,7 +68,6 @@ func (i *PrimarySelectionDeviceManager) CreateSource() (*PrimarySelectionSource,
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -89,7 +88,6 @@ func (i *PrimarySelectionDeviceManager) GetDevice(seat *client.Seat) (*PrimarySe
 	client.PutUint32(_reqBuf[l:l+4], id.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], seat.ID())
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return id, err
 }
@@ -144,13 +142,11 @@ func (i *PrimarySelectionDevice) SetSelection(source *PrimarySelectionSource, se
 	l += 4
 	if source == nil {
 		client.PutUint32(_reqBuf[l:l+4], 0)
-		l += 4
 	} else {
 		client.PutUint32(_reqBuf[l:l+4], source.ID())
-		l += 4
 	}
-	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
 	l += 4
+	client.PutUint32(_reqBuf[l:l+4], uint32(serial))
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -219,7 +215,6 @@ func (i *PrimarySelectionDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		var e PrimarySelectionDeviceDataOfferEvent
 		l := 0
 		e.Offer = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*PrimarySelectionOffer)(nil)).(*PrimarySelectionOffer)
-		l += 4
 
 		i.dataOfferHandler(e)
 	case 1:
@@ -229,7 +224,6 @@ func (i *PrimarySelectionDevice) Dispatch(opcode uint32, fd int, data []byte) {
 		var e PrimarySelectionDeviceSelectionEvent
 		l := 0
 		e.Id = i.Context().GetOrRegister(client.Uint32(data[l:l+4]), (*PrimarySelectionOffer)(nil)).(*PrimarySelectionOffer)
-		l += 4
 
 		i.selectionHandler(e)
 	}
@@ -332,7 +326,6 @@ func (i *PrimarySelectionOffer) Dispatch(opcode uint32, fd int, data []byte) {
 		mimeTypeLen := client.PaddedLen(int(client.Uint32(data[l : l+4])))
 		l += 4
 		e.MimeType = client.String(data[l : l+mimeTypeLen])
-		l += mimeTypeLen
 
 		i.offerHandler(e)
 	}
@@ -375,7 +368,6 @@ func (i *PrimarySelectionSource) Offer(mimeType string) error {
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
 	l += 4
 	client.PutString(_reqBuf[l:l+(4+mimeTypeLen)], mimeType, mimeTypeLen)
-	l += (4 + mimeTypeLen)
 	err := i.Context().WriteMsg(_reqBuf, nil)
 	return err
 }
