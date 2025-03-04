@@ -6,11 +6,11 @@ import (
 	"os"
 
 	"github.com/nfnt/resize"
-	"github.com/raitonoberu/go-wayland/examples/imageviewer/internal/swizzle"
-	"github.com/raitonoberu/go-wayland/examples/imageviewer/internal/tempfile"
-	"github.com/raitonoberu/go-wayland/client"
-	"github.com/raitonoberu/go-wayland/cursor"
-	xdg_shell "github.com/raitonoberu/go-wayland/stable/xdg-shell"
+	"github.com/pdf/go-wayland/examples/imageviewer/internal/swizzle"
+	"github.com/pdf/go-wayland/examples/imageviewer/internal/tempfile"
+	"github.com/pdf/go-wayland/client"
+	"github.com/pdf/go-wayland/cursor"
+	xdg_shell "github.com/pdf/go-wayland/stable/xdg-shell"
 	"golang.org/x/sys/unix"
 )
 

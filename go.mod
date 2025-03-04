@@ -1,4 +1,4 @@
-module github.com/raitonoberu/go-wayland
+module github.com/pdf/go-wayland
 
 go 1.24
 
