@@ -71,7 +71,6 @@ func (i *Shell) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -307,7 +306,6 @@ func (i *Positioner) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -792,7 +790,6 @@ func (i *Surface) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1053,7 +1050,6 @@ func (i *Toplevel) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1408,7 +1404,6 @@ func (i *Toplevel) SetMaximized() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1445,7 +1440,6 @@ func (i *Toplevel) UnsetMaximized() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1488,7 +1482,6 @@ func (i *Toplevel) UnsetFullscreen() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1511,7 +1504,6 @@ func (i *Toplevel) SetMinimized() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1820,7 +1812,6 @@ func (i *Popup) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }

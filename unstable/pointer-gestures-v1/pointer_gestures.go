@@ -109,7 +109,6 @@ func (i *PointerGestures) Release() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -192,7 +191,6 @@ func (i *PointerGestureSwipe) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -357,7 +355,6 @@ func (i *PointerGesturePinch) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -538,7 +535,6 @@ func (i *PointerGestureHold) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }

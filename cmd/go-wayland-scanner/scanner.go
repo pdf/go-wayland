@@ -405,7 +405,9 @@ func writeRequest(w io.Writer, ifaceName string, opcode int, r Request) {
 	} else {
 		fmt.Fprintf(w, "client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))\n")
 	}
-	fmt.Fprintf(w, "l += 4\n")
+	if len(r.Args) > 0 {
+		fmt.Fprintf(w, "l += 4\n")
+	}
 
 	fdIndex := -1
 	for i, arg := range r.Args {

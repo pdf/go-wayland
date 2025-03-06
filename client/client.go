@@ -594,7 +594,6 @@ func (i *ShmPool) Destroy() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -703,7 +702,6 @@ func (i *Shm) Release() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1604,7 +1602,6 @@ func (i *Buffer) Destroy() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1757,7 +1754,6 @@ func (i *DataOffer) Destroy() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -1786,7 +1782,6 @@ func (i *DataOffer) Finish() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -2064,7 +2059,6 @@ func (i *DataSource) Destroy() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -2471,7 +2465,6 @@ func (i *DataDevice) Release() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3067,7 +3060,6 @@ func (i *ShellSurface) SetToplevel() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -3689,7 +3681,6 @@ func (i *Surface) Destroy() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -4002,7 +3993,6 @@ func (i *Surface) Commit() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -4481,7 +4471,6 @@ func (i *Seat) Release() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -4773,7 +4762,6 @@ func (i *Pointer) Release() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -5523,7 +5511,6 @@ func (i *Keyboard) Release() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -5896,7 +5883,6 @@ func (i *Touch) Release() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -6201,7 +6187,6 @@ func (i *Output) Release() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -6708,7 +6693,6 @@ func (i *Region) Destroy() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -6835,7 +6819,6 @@ func (i *Subcompositor) Destroy() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -7052,7 +7035,6 @@ func (i *Subsurface) Destroy() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -7166,7 +7148,6 @@ func (i *Subsurface) SetSync() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -7200,7 +7181,6 @@ func (i *Subsurface) SetDesync() error {
 	PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }

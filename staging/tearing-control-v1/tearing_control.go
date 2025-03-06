@@ -87,7 +87,6 @@ func (i *TearingControlManager) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
@@ -211,7 +210,6 @@ func (i *TearingControl) Destroy() error {
 	client.PutUint32(_reqBuf[l:4], i.ID())
 	l += 4
 	client.PutUint32(_reqBuf[l:l+4], uint32(_reqBufLen<<16|opcode&0x0000ffff))
-	l += 4
 	err := i.Context().WriteMsg(_reqBuf[:], nil)
 	return err
 }
